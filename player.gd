@@ -8,14 +8,15 @@ var is_attacking
 var is_sprinting = false
 var sprint_speed = 350
 var speed_scale = "speed_scale"
-
 var health = 100
 var max_health = 100
 var regen_health = 2
 var stamina = 100
 var max_stamina = 100
 var regen_stamina = 5
-
+var stamina_drain = 10  # Stamina drain per second when sprinting
+signal updated_healthbar
+signal updated_staminabar
 func _physics_process(delta):
 	var direction: Vector2 = Vector2.ZERO
 	direction.x = Input.get_action_strength("right") - Input.get_action_strength("left")
@@ -60,26 +61,35 @@ func _input(event):
 		is_attacking = true
 		animation = "attack_" + returnedDirection(new_direction)
 		animated_sprite.play(animation)
+	
 	if event.is_action_pressed("sprint"):
-		if not is_sprinting:
+		if not is_sprinting and stamina > 0:  # Only toggle sprinting if there's stamina
 			is_sprinting = true
 			speed = sprint_speed
 			animated_sprite.speed_scale = 2
 			print("sprinting")
-		else:
+		elif is_sprinting:  # If sprinting is already active, toggle it off
 			is_sprinting = false
 			speed = 200
 			animated_sprite.speed_scale = 1
 			print("not sprinting")
 
-func _on_animated_sprite_animation_finished():
-	is_attacking = false
-
 func _process(delta):
 	# Regenerate health and stamina every tick, ensuring they don't exceed their max values
-	var updated_health = min(health + regen_health * delta, max_health)
-	var updated_stamina = min(stamina + regen_stamina * delta, max_stamina)
+	health = min(health + regen_health * delta, max_health)
+	updated_healthbar.emit(health, max_health)
 
-	# Now set health and stamina to the updated values
-	health = updated_health
-	stamina = updated_stamina
+	# Regenerate stamina
+	stamina = min(stamina + regen_stamina * delta, max_stamina)
+	print(stamina)
+	updated_staminabar.emit(stamina, max_stamina)
+	
+	# Sprinting logic (stamina drain and depletion)
+	if is_sprinting:
+		stamina -= stamina_drain * delta
+		print(stamina)
+		if stamina <= 0:
+			is_sprinting = false  # Stop sprinting if stamina is depleted
+			speed = 200
+			animated_sprite.speed_scale = 1
+			print("stamina depleted, stopped sprinting")    
