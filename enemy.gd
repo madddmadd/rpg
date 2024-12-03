@@ -1,19 +1,24 @@
 extends CharacterBody2D
 
-var speed = 200.0
+var speed = 205.0
 var direction: Vector2
 var new_direction = Vector2(0, 1)
 var rng = RandomNumberGenerator.new()
 var timer = 0
 @onready var player = $"../player"
 @onready var animated_sprite = $animated_sprite
+@onready var animation_player = $AnimationPlayer
 var animation: String
 var is_attacking = false
-
+@onready var bullet_scene =preload("res://bullet.tscn")
+var bullet_damage=5
+var bullet_reload=100
+var bullet_tsf=1
+var health = 100
+var max_health = 100
+var regen_health=.5
 func _ready():
 	rng.randomize()
-	# Set up and start a Timer if needed here
-
 func _physics_process(delta):
 	var movement = speed * direction * delta
 	var collision = move_and_collide(movement)
@@ -72,3 +77,17 @@ func returnedDirection(direction: Vector2):
 	return default_return
 func _on_animated_sprite_animation_finished():
 	is_attacking = false
+func _process(delta):
+	# Regenerate health and stamina every tick, ensuring they don't exceed their max values
+	health = clamp(health + regen_health * delta, 0,max_health)
+func hit(damage):
+	health-=bullet_damage
+	
+	if health>0:
+		direction=Vector2.ZERO
+		animation_player.play("damage")
+		animated_sprite.play("hit")
+		await get_tree().create_timer(2).timeout
+		pass
+	else:
+		queue_free()

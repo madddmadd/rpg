@@ -1,0 +1,92 @@
+[gd_scene load_steps=13 format=3 uid="uid://cgi8ut8bbygly"]
+
+[ext_resource type="Texture2D" uid="uid://c0x06v0gpmfeh" path="res://Assets/Assets/FX/Death Explosion.png" id="1_s1rrx"]
+[ext_resource type="Script" path="res://bullet.gd" id="1_xhljx"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gcd2s"]
+atlas = ExtResource("1_s1rrx")
+region = Rect2(0, 0, 50, 55)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xbw0e"]
+atlas = ExtResource("1_s1rrx")
+region = Rect2(50, 0, 50, 55)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bx313"]
+atlas = ExtResource("1_s1rrx")
+region = Rect2(100, 0, 50, 55)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xlkbq"]
+atlas = ExtResource("1_s1rrx")
+region = Rect2(150, 0, 50, 55)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k843j"]
+atlas = ExtResource("1_s1rrx")
+region = Rect2(200, 0, 50, 55)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b06t8"]
+atlas = ExtResource("1_s1rrx")
+region = Rect2(250, 0, 50, 55)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hjtur"]
+atlas = ExtResource("1_s1rrx")
+region = Rect2(300, 0, 50, 55)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_aa8mm"]
+atlas = ExtResource("1_s1rrx")
+region = Rect2(350, 0, 50, 55)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_s5ic7"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gcd2s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xbw0e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bx313")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xlkbq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k843j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b06t8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hjtur")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_aa8mm")
+}],
+"loop": false,
+"name": &"hit",
+"speed": 20.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7ugke"]
+size = Vector2(10, 7)
+
+[node name="Bullet" type="Area2D"]
+z_index = 1
+script = ExtResource("1_xhljx")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_s5ic7")
+animation = &"hit"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 4.5)
+shape = SubResource("RectangleShape2D_7ugke")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 4.0
+one_shot = true
+autostart = true
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

@@ -905,10 +905,16 @@ script = ExtResource("1_j7tbb")
 shape = SubResource("CapsuleShape2D_sqxs8")
 
 [node name="animated_sprite" type="AnimatedSprite2D" parent="."]
+position = Vector2(2, -3)
 scale = Vector2(1.83333, 1.27273)
 sprite_frames = SubResource("SpriteFrames_s14ja")
 animation = &"attack_down"
 
 [node name="Camera2D" type="Camera2D" parent="."]
 
+[node name="timer" type="Timer" parent="."]
+wait_time = 0.3
+autostart = true
+
 [connection signal="animation_finished" from="animated_sprite" to="." method="_on_animated_sprite_animation_finished"]
+[connection signal="timeout" from="timer" to="." method="_on_timer_timeout"]
