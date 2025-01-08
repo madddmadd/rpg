@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://l1mwuxanfj7i"]
+
+[ext_resource type="Script" path="res://pickup.gd" id="1_gy2wj"]
+[ext_resource type="Texture2D" uid="uid://dbk46ukd6bwuj" path="res://Assets/Assets/Icons/bulletUP.png" id="2_edj5w"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2147e"]
+size = Vector2(10, 10)
+
+[node name="pickup" type="Area2D"]
+script = ExtResource("1_gy2wj")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_edj5w")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -1)
+shape = SubResource("RectangleShape2D_2147e")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

@@ -618,10 +618,9 @@ position = Vector2(0, -5.7727)
 scale = Vector2(1.83333, 1.56136)
 sprite_frames = SubResource("SpriteFrames_s14ja")
 animation = &"hit"
-frame_progress = 1.0
 
 [node name="Timer" type="Timer" parent="."]
-wait_time = 0.15
+wait_time = 0.045
 autostart = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]

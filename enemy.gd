@@ -5,12 +5,12 @@ var direction: Vector2
 var new_direction = Vector2(0, 1)
 var rng = RandomNumberGenerator.new()
 var timer = 0
-@onready var player = $"../player"
+@onready var player = get_tree().root.get_node("Level/player")
 @onready var animated_sprite = $animated_sprite
 @onready var animation_player = $AnimationPlayer
 var animation: String
 var is_attacking = false
-@onready var bullet_scene =preload("res://bullet.tscn")
+
 var bullet_damage=5
 var bullet_reload=100
 var bullet_tsf=1
@@ -19,6 +19,8 @@ var max_health = 100
 var regen_health=.5
 func _ready():
 	rng.randomize()
+	print("enemy spawned at ", position)
+	
 func _physics_process(delta):
 	var movement = speed * direction * delta
 	var collision = move_and_collide(movement)
@@ -37,7 +39,7 @@ func _on_timer_timeout():
 		var player_distance = player.position - position
 		if player_distance.length() <= 50:
 			new_direction = player_distance.normalized()
-		elif player_distance.length() <= 500 and timer <= 0:
+		elif player_distance.length() <= 700 and timer <= 0:
 			direction = player_distance.normalized()
 		elif timer <= 0:
 			var random_direction = rng.randf()
@@ -82,12 +84,16 @@ func _process(delta):
 	health = clamp(health + regen_health * delta, 0,max_health)
 func hit(damage):
 	health-=bullet_damage
-	
+
 	if health>0:
+		is_attacking= true
 		direction=Vector2.ZERO
 		animation_player.play("damage")
 		animated_sprite.play("hit")
 		await get_tree().create_timer(2).timeout
+		is_attacking=false
 		pass
 	else:
 		queue_free()
+
+	

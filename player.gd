@@ -82,12 +82,12 @@ func _input(event):
 			is_sprinting = true
 			speed = sprint_speed
 			animated_sprite.speed_scale = 2
-			print("sprinting")
+			
 		elif is_sprinting:  # If sprinting is already active, toggle it off
 			is_sprinting = false
 			speed = 200
 			animated_sprite.speed_scale = 1
-			print("not sprinting")
+			
 
 func _process(delta):
 	# Regenerate health and stamina every tick, ensuring they don't exceed their max values
@@ -107,7 +107,7 @@ func _process(delta):
 			is_sprinting = false  # Stop sprinting if stamina is depleted
 			speed = 200
 			animated_sprite.speed_scale = 1
-			print("stamina depleted, stopped sprinting")    
+			
 func _on_animated_sprite_animation_finished():
 	is_attacking= false
 func _on_timer_timeout():
